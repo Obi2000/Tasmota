@@ -98,7 +98,10 @@ bool UdpConnect(void)
 #endif  // ESP32
     }
     if (!udp_connected) {     // if connection failed
-      AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_UPNP D_MULTICAST_JOIN_FAILED));
+      #ifndef USE_HTTPHOOK
+        // HttpHook: suppressing log while working on HttpHook device discovery 
+        AddLog(LOG_LEVEL_INFO, PSTR(D_LOG_UPNP D_MULTICAST_JOIN_FAILED));
+      #endif
     }
   }
   return udp_connected;

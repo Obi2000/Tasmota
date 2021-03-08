@@ -334,6 +334,15 @@ void MqttPublish(const char* topic, bool retained) {
   char slog_type[20];
   snprintf_P(slog_type, sizeof(slog_type), PSTR(D_LOG_RESULT));
 
+  #ifdef USE_HTTPHOOK
+    // HttpHook: Simple method to publish status to a HttpHook.
+    // HttpHook: Due to the number of routes into this function, this is probably the cleanest location to put this call.
+    if (Settings.flag4.httphook_enabled) {
+      httphookPublish();
+    }
+  #endif
+
+
   if (Settings.flag.mqtt_enabled) {  // SetOption3 - Enable MQTT
     if (MqttPublishLib(topic, retained)) {
       snprintf_P(slog_type, sizeof(slog_type), PSTR(D_LOG_MQTT));

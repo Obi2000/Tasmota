@@ -286,6 +286,11 @@ const char HTTP_FORM_OTHER[] PROGMEM =
   "<label><b>" D_WEB_ADMIN_PASSWORD "</b><input type='checkbox' onclick='sp(\"wp\")'></label><br><input id='wp' type='password' placeholder=\"" D_WEB_ADMIN_PASSWORD "\" value=\"" D_ASTERISK_PWD "\"><br>"
   "<br>"
   "<label><input id='b1' type='checkbox'%s><b>" D_MQTT_ENABLE "</b></label><br>"
+  #ifdef USE_HTTPHOOK
+    // HttpHook: Additional button for HttpHook support
+    "<label><input id='h1' name='h1' type='checkbox'%s><b>" D_HTTPHOOK_ENABLE "</b></label><br/>"
+  #endif
+
   "<br>"
   "<label><b>" D_DEVICE_NAME "</b> (%s)</label><br><input id='dn' placeholder=\"\" value=\"%s\"><br>"
   "<br>";
@@ -1893,6 +1898,9 @@ void HandleOtherConfiguration(void)
   strlcpy(stemp, TasmotaGlobal.mqtt_data, sizeof(stemp));  // Get JSON template
   WSContentSend_P(HTTP_FORM_OTHER, stemp, (USER_MODULE == Settings.module) ? PSTR(" checked disabled") : "",
     (Settings.flag.mqtt_enabled) ? PSTR(" checked") : "",   // SetOption3 - Enable MQTT
+	#ifdef USE_HTTPHOOK
+    (Settings.flag4.httphook_enabled) ? " checked" : "",  // SetOption113 - Enable HttpHook
+	#endif
     SettingsText(SET_FRIENDLYNAME1), SettingsText(SET_DEVICENAME));
 
   uint32_t maxfn = (TasmotaGlobal.devices_present > MAX_FRIENDLYNAMES) ? MAX_FRIENDLYNAMES : (!TasmotaGlobal.devices_present) ? 1 : TasmotaGlobal.devices_present;
@@ -1948,6 +1956,12 @@ void OtherSaveSettings(void)
   WebGetArg(PSTR("wp"), tmp, sizeof(tmp));
   SettingsUpdateText(SET_WEBPWD, (!strlen(tmp)) ? "" : (strchr(tmp,'*')) ? SettingsText(SET_WEBPWD) : tmp);
   Settings.flag.mqtt_enabled = Webserver->hasArg(F("b1"));  // SetOption3 - Enable MQTT
+
+#ifdef USE_HTTPHOOK
+    // HttpHook: Saves the variable "true or false" of whether the user has enabled HttpHook support
+    Settings.flag4.httphook_enabled = Webserver->hasArg("h1");
+#endif
+
 #ifdef USE_EMULATION
   UdpDisconnect();
 #if defined(USE_EMULATION_WEMO) || defined(USE_EMULATION_HUE)
