@@ -864,6 +864,10 @@ void SettingsDefaultSet2(void) {
   memcpy_P(Settings.mqtt_fingerprint[1], default_fingerprint2, sizeof(default_fingerprint2));
   Settings.tele_period = TELE_PERIOD;
   Settings.mqttlog_level = MQTT_LOG_LEVEL;
+  // HttpHook
+  #ifdef USE_HTTPHOOK
+    flag5.httphook_enabled |= HTTPHOOK_USE;
+  #endif
 
   // Energy
   flag.no_power_on_check |= ENERGY_VOLTAGE_ALWAYS;
