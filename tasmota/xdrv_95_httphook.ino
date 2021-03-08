@@ -60,7 +60,7 @@ boolean httphookPublish() {
     // TODO: Add full custom URL support
     String url = F("/");
 
-    message = String(mqtt_data);
+    message = String(TasmotaGlobal.mqtt_data);
 
     client.print(String("POST ") + url + " HTTP/1.1\r\n" +
                  "Host: " + host + ":" + port + "\r\n" + authHeader +
@@ -121,7 +121,7 @@ void HandleHttpHookConfiguration(void)
 {
   if (!HttpCheckPriviledgedAccess()) { return; }
   
-  AddLog_P(LOG_LEVEL_DEBUG, S_LOG_HTTP, S_CONFIGURE_HTTPHOOK);
+  AddLog_P(LOG_LEVEL_DEBUG, D_LOG_HTTP, S_CONFIGURE_HTTPHOOK);
 
   if (Webserver->hasArg("save")) {
     HttpHookSaveSettings();
@@ -129,7 +129,7 @@ void HandleHttpHookConfiguration(void)
     return;
   }
 
-  char str[sizeof(Settings.ex_mqtt_client)];
+  //char str[sizeof(Settings.ex_mqtt_client)];
 
   WSContentStart_P(S_CONFIGURE_HTTPHOOK);
   WSContentSendStyle();
@@ -186,14 +186,14 @@ boolean HttpHookCommand(void)
       strlcpy(Settings.httphook_host, (SC_CLEAR == Shortcut()) ? "" : (SC_DEFAULT == Shortcut()) ? HTTPHOOK_HOST : dataBuf, sizeof(Settings.httphook_host));
       //restart_flag = 2;
     }
-    snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_SVALUE, command, Settings.httphook_host);
+    snprintf_P(TasmotaGlobal.mqtt_data, sizeof(TasmotaGlobal.mqtt_data), S_JSON_COMMAND_SVALUE, command, Settings.httphook_host);
   }
   else if (CMND_HTTPHOOKPORT == command_code) {
     if (payload > 0) {
       Settings.httphook_port = (1 == payload) ? HTTPHOOK_PORT : payload;
       //restart_flag = 2;
     }
-    snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_NVALUE, command, Settings.httphook_port);
+    snprintf_P(TasmotaGlobal.mqtt_data, sizeof(TasmotaGlobal.mqtt_data), S_JSON_COMMAND_NVALUE, command, Settings.httphook_port);
   }
   else serviced = false;  // Unknown command
 
@@ -205,9 +205,9 @@ boolean HttpHookCommand(void)
     //}
 
     //if (Settings.flag.value_units) {
-    //  snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_LVALUE_SPACE_UNIT, command, nvalue, GetTextIndexed(sunit, sizeof(sunit), unit, kUnitNames));
+    //  snprintf_P(TasmotaGlobal.mqtt_data, sizeof(TasmotaGlobal.mqtt_data), S_JSON_COMMAND_LVALUE_SPACE_UNIT, command, nvalue, GetTextIndexed(sunit, sizeof(sunit), unit, kUnitNames));
     //} else {
-    //  snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_LVALUE, command, nvalue);
+    //  snprintf_P(TasmotaGlobal.mqtt_data, sizeof(TasmotaGlobal.mqtt_data), S_JSON_COMMAND_LVALUE, command, nvalue);
     //}
   }
 
@@ -222,7 +222,7 @@ bool Xdrv95(uint8_t function)
 {
   bool result = false;
 
-  if (Settings.flag4.httphook_enabled) {
+  if (Settings.flag5.httphook_enabled) {
     switch (function) {
 #ifdef USE_WEBSERVER
       case FUNC_INIT:

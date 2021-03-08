@@ -866,7 +866,7 @@ void SettingsDefaultSet2(void) {
   Settings.mqttlog_level = MQTT_LOG_LEVEL;
   // HttpHook
   #ifdef USE_HTTPHOOK
-    flag4.httphook_enabled = HTTPHOOK_USE;
+    flag5.httphook_enabled |= HTTPHOOK_USE;
   #endif
 
   // Energy

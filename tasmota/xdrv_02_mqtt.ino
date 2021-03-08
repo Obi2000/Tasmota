@@ -337,7 +337,7 @@ void MqttPublish(const char* topic, bool retained) {
   #ifdef USE_HTTPHOOK
     // HttpHook: Simple method to publish status to a HttpHook.
     // HttpHook: Due to the number of routes into this function, this is probably the cleanest location to put this call.
-    if (Settings.flag4.httphook_enabled) {
+    if (Settings.flag5.httphook_enabled) {
       httphookPublish();
     }
   #endif

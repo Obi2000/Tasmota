@@ -1899,7 +1899,7 @@ void HandleOtherConfiguration(void)
   WSContentSend_P(HTTP_FORM_OTHER, stemp, (USER_MODULE == Settings.module) ? PSTR(" checked disabled") : "",
     (Settings.flag.mqtt_enabled) ? PSTR(" checked") : "",   // SetOption3 - Enable MQTT
 	#ifdef USE_HTTPHOOK
-    (Settings.flag4.httphook_enabled) ? " checked" : "",  // SetOption113 - Enable HttpHook
+    (Settings.flag5.httphook_enabled) ? " checked" : "",  // SetOption113 - Enable HttpHook
 	#endif
     SettingsText(SET_FRIENDLYNAME1), SettingsText(SET_DEVICENAME));
 
@@ -1959,7 +1959,7 @@ void OtherSaveSettings(void)
 
 #ifdef USE_HTTPHOOK
     // HttpHook: Saves the variable "true or false" of whether the user has enabled HttpHook support
-    Settings.flag4.httphook_enabled = Webserver->hasArg("h1");
+    Settings.flag5.httphook_enabled = Webserver->hasArg("h1");
 #endif
 
 #ifdef USE_EMULATION
