@@ -12,6 +12,7 @@ extern void be_load_listlib(bvm *vm);
 extern void be_load_maplib(bvm *vm);
 extern void be_load_rangelib(bvm *vm);
 extern void be_load_filelib(bvm *vm);
+extern void be_load_byteslib(bvm *vm);
 
 extern void be_load_tasmota_ntvlib(bvm *vm);
 extern void be_load_wirelib(bvm *vm);
