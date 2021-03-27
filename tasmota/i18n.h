@@ -88,6 +88,7 @@
 #define D_JSON_GATEWAY "Gateway"
 #define D_JSON_GREEN "Green"
 #define D_JSON_GROUPS "Groups"
+#define D_JSON_HALLEFFECT "HallEffect"
 #define D_JSON_HALTING "Halting"
 #define D_JSON_HEAPSIZE "Heap"
 #define D_JSON_HIGH "High"
@@ -211,6 +212,8 @@
 #define D_JSON_IMPORT "Import"
 #define D_JSON_EXPORT "Export"
 #define D_JSON_TOTAL_ACTIVE "TotalActive"
+#define D_JSON_SIGNALSTRENGTH "SignalStrength"
+#define D_JSON_CHIPTEMPERATURE "ChipTemperature"
 
 #define D_RSLT_ENERGY "ENERGY"
 #define D_RSLT_HASS_STATE "HASS_STATE"
@@ -330,7 +333,7 @@
 #define D_CMND_DEVGROUP_SEND "DevGroupSend"
 #define D_CMND_DEVGROUP_SHARE "DevGroupShare"
 #define D_CMND_DEVGROUPSTATUS "DevGroupStatus"
-#define D_CMND_DEVGROUP_DEVICE "DevGroupTie"
+#define D_CMND_DEVGROUP_TIE "DevGroupTie"
 #define D_CMND_SERIALSEND "SerialSend"
 #define D_CMND_SERIALDELIMITER "SerialDelimiter"
 #define D_CMND_BAUDRATE "Baudrate"
@@ -366,6 +369,8 @@
 #define D_CMND_MQTTCLIENT "MqttClient"
 #define D_CMND_MQTTUSER "MqttUser"
 #define D_CMND_MQTTPASSWORD "MqttPassword"
+#define D_CMND_MQTTKEEPALIVE "MqttKeepAlive"
+#define D_CMND_MQTTTIMEOUT "MqttTimeout"
 #define D_CMND_TLSKEY "TLSKey"
 #define D_CMND_FULLTOPIC "FullTopic"
 #define D_CMND_PREFIX "Prefix"
@@ -782,6 +787,7 @@ const char JSON_SNS_RANGE[] PROGMEM = ",\"%s\":{\"" D_JSON_RANGE "\":%d}";
 const char JSON_SNS_GNGPM[] PROGMEM = ",\"%s\":{\"" D_JSON_TOTAL_USAGE "\":%s,\"" D_JSON_FLOWRATE "\":%s}";
 
 const char S_LOG_I2C_FOUND_AT[] PROGMEM = D_LOG_I2C "%s " D_FOUND_AT " 0x%x";
+const char S_LOG_I2C_FOUND_AT_PORT[] PROGMEM = D_LOG_I2C "%s " D_FOUND_AT " 0x%x (" D_PORT " %d)";
 
 const char S_RSLT_POWER[] PROGMEM = D_RSLT_POWER;
 const char S_RSLT_RESULT[] PROGMEM = D_RSLT_RESULT;
@@ -821,6 +827,7 @@ const char HTTP_SNS_GPM[]           PROGMEM = "{s}%s "  D_FLOW_RATE           "{
 const char HTTP_SNS_MOISTURE[]      PROGMEM = "{s}%s "  D_MOISTURE            "{m}%d " D_UNIT_PERCENT             "{e}";
 const char HTTP_SNS_RANGE[]         PROGMEM = "{s}%s "  D_RANGE               "{m}%d"                             "{e}";
 const char HTTP_SNS_DISTANCE[]      PROGMEM = "{s}%s "  D_DISTANCE            "{m}%d " D_UNIT_MILLIMETER          "{e}";
+const char HTTP_SNS_DISTANCE_CM[]   PROGMEM = "{s}%s "  D_DISTANCE            "{m}%s " D_UNIT_CENTIMETER          "{e}";
 const char HTTP_SNS_VOLTAGE[]       PROGMEM = "{s}"     D_VOLTAGE             "{m}%s " D_UNIT_VOLT                "{e}";
 const char HTTP_SNS_CURRENT[]       PROGMEM = "{s}"     D_CURRENT             "{m}%s " D_UNIT_AMPERE              "{e}";
 const char HTTP_SNS_POWER[]         PROGMEM = "{s}"     D_POWERUSAGE          "{m}%s " D_UNIT_WATT                "{e}";

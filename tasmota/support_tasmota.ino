@@ -155,6 +155,63 @@ char* GetStateText(uint32_t state)
   return SettingsText(SET_STATE_TXT1 + state);
 }
 
+/*********************************************************************************************\
+ * Zero-cross support
+\*********************************************************************************************/
+
+//#define DEBUG_ZEROCROSS
+
+void ZeroCrossMomentStart(void) {
+  if (!TasmotaGlobal.zc_interval) { return; }
+
+#ifdef DEBUG_ZEROCROSS
+  uint32_t dbg_interval = TasmotaGlobal.zc_interval;
+  uint32_t dbg_zctime = TasmotaGlobal.zc_time;
+  uint32_t dbg_starttime = micros();
+#endif
+
+  uint32_t trigger_moment = TasmotaGlobal.zc_time + TasmotaGlobal.zc_interval - TasmotaGlobal.zc_offset - TasmotaGlobal.zc_code_offset;
+  while (TimeReachedUsec(trigger_moment)) {    // Trigger moment already passed so try next
+    trigger_moment += TasmotaGlobal.zc_interval;
+  }
+  while (!TimeReachedUsec(trigger_moment)) {}  // Wait for trigger moment
+
+#ifdef DEBUG_ZEROCROSS
+  uint32_t dbg_endtime = micros();
+  AddLog(LOG_LEVEL_DEBUG, PSTR("ZCD: CodeExecTime %d, StartTime %u, EndTime %u, ZcTime %u, Interval %d"),
+    dbg_endtime - dbg_starttime, dbg_starttime, dbg_endtime, dbg_zctime, dbg_interval);
+#endif
+
+  TasmotaGlobal.zc_code_offset = micros();
+}
+
+void ZeroCrossMomentEnd(void) {
+  if (!TasmotaGlobal.zc_interval) { return; }
+  TasmotaGlobal.zc_code_offset = (micros() - TasmotaGlobal.zc_code_offset) / 2;
+
+#ifdef DEBUG_ZEROCROSS
+  AddLog(LOG_LEVEL_DEBUG, PSTR("ZCD: CodeExecTime %d"), TasmotaGlobal.zc_code_offset * 2);
+#endif
+}
+
+void ICACHE_RAM_ATTR ZeroCrossIsr(void) {
+  uint32_t time = micros();
+  TasmotaGlobal.zc_interval = ((int32_t) (time - TasmotaGlobal.zc_time));
+  TasmotaGlobal.zc_time = time;
+}
+
+void ZeroCrossInit(uint32_t offset) {
+  if (PinUsed(GPIO_ZEROCROSS)) {
+    TasmotaGlobal.zc_offset = offset;
+
+    uint32_t gpio = Pin(GPIO_ZEROCROSS);
+    pinMode(gpio, INPUT_PULLUP);
+    attachInterrupt(gpio, ZeroCrossIsr, CHANGE);
+
+    AddLog(LOG_LEVEL_INFO, PSTR("ZCD: Activated"));  // Zero-cross detection activated
+  }
+}
+
 /********************************************************************************************/
 
 void SetLatchingRelay(power_t lpower, uint32_t state)
@@ -232,6 +289,8 @@ void SetDevicePower(power_t rpower, uint32_t source)
 #endif  // ESP8266
   else
   {
+    ZeroCrossMomentStart();
+
     for (uint32_t i = 0; i < TasmotaGlobal.devices_present; i++) {
       power_t state = rpower &1;
       if (i < MAX_RELAYS) {
@@ -239,6 +298,8 @@ void SetDevicePower(power_t rpower, uint32_t source)
       }
       rpower >>= 1;
     }
+
+    ZeroCrossMomentEnd();
   }
 }
 
@@ -556,17 +617,21 @@ void ExecuteCommandPower(uint32_t device, uint32_t state, uint32_t source)
         ((POWER_ON == state) || ((POWER_TOGGLE == state) && !(TasmotaGlobal.power & mask)))
        ) {
       interlock_mutex = true;                           // Clear all but masked relay in interlock group if new set requested
+      bool perform_interlock_delay = false;
       for (uint32_t i = 0; i < MAX_INTERLOCKS; i++) {
         if (Settings.interlock[i] & mask) {             // Find interlock group
           for (uint32_t j = 0; j < TasmotaGlobal.devices_present; j++) {
             power_t imask = 1 << j;
             if ((Settings.interlock[i] & imask) && (TasmotaGlobal.power & imask) && (mask != imask)) {
               ExecuteCommandPower(j +1, POWER_OFF, SRC_IGNORE);
-              delay(50);                                // Add some delay to make sure never have more than one relay on
+              perform_interlock_delay = true;
             }
           }
           break;                                        // An interlocked relay is only present in one group so quit
         }
+      }
+      if (perform_interlock_delay) {
+        delay(50);                                // Add some delay to make sure never have more than one relay on
       }
       interlock_mutex = false;
     }
@@ -769,7 +834,7 @@ bool MqttShowSensor(void)
   int json_data_start = strlen(TasmotaGlobal.mqtt_data);
   for (uint32_t i = 0; i < MAX_SWITCHES; i++) {
 #ifdef USE_TM1638
-    if (PinUsed(GPIO_SWT1, i) || (PinUsed(GPIO_TM16CLK) && PinUsed(GPIO_TM16DIO) && PinUsed(GPIO_TM16STB))) {
+    if (PinUsed(GPIO_SWT1, i) || (PinUsed(GPIO_TM1638CLK) && PinUsed(GPIO_TM1638DIO) && PinUsed(GPIO_TM1638STB))) {
 #else
     if (PinUsed(GPIO_SWT1, i)) {
 #endif  // USE_TM1638
@@ -1092,7 +1157,7 @@ void Every250mSeconds(void)
           }
 #endif  // FIRMWARE_MINIMAL
           if (ota_retry_counter < OTA_ATTEMPTS / 2) {
-            if (!strcasecmp_P(TasmotaGlobal.mqtt_data, PSTR(".gz"))) {
+            if (strstr_P(TasmotaGlobal.mqtt_data, PSTR(".gz"))) {      // Might be made case insensitive...
               ota_retry_counter = 1;
             } else {
               strcat_P(TasmotaGlobal.mqtt_data, PSTR(".gz"));
@@ -1742,6 +1807,12 @@ void GpioInit(void)
   if (TasmotaGlobal.i2c_enabled) {
     Wire.begin(Pin(GPIO_I2C_SDA), Pin(GPIO_I2C_SCL));
   }
+#ifdef ESP32
+  TasmotaGlobal.i2c_enabled_2 = (PinUsed(GPIO_I2C_SCL, 1) && PinUsed(GPIO_I2C_SDA, 1));
+  if (TasmotaGlobal.i2c_enabled_2) {
+    Wire1.begin(Pin(GPIO_I2C_SDA, 1), Pin(GPIO_I2C_SCL, 1));
+  }
+#endif
 #endif  // USE_I2C
 
   TasmotaGlobal.devices_present = 0;
@@ -1792,8 +1863,8 @@ void GpioInit(void)
 
   for (uint32_t i = 0; i < MAX_RELAYS; i++) {
     if (PinUsed(GPIO_REL1, i)) {
-      pinMode(Pin(GPIO_REL1, i), OUTPUT);
       TasmotaGlobal.devices_present++;
+      pinMode(Pin(GPIO_REL1, i), OUTPUT);
 #ifdef ESP8266
       if (EXS_RELAY == TasmotaGlobal.module_type) {
         digitalWrite(Pin(GPIO_REL1, i), bitRead(TasmotaGlobal.rel_inverted, i) ? 1 : 0);
@@ -1810,8 +1881,8 @@ void GpioInit(void)
         SetPin(Pin(GPIO_LED1, i), AGPIO(GPIO_ARIRFSEL));  // Legacy support where LED4 was Arilux RF enable
       } else {
 #endif
-        pinMode(Pin(GPIO_LED1, i), OUTPUT);
         TasmotaGlobal.leds_present++;
+        pinMode(Pin(GPIO_LED1, i), OUTPUT);
         digitalWrite(Pin(GPIO_LED1, i), bitRead(TasmotaGlobal.led_inverted, i));
 #ifdef USE_ARILUX_RF
       }

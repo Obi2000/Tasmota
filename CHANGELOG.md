@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - Development
 
+## [9.3.1.2]
+### Added
+- Commands ``MqttKeepAlive 1..100`` to set Mqtt Keep Alive timer (default 30) and ``MqttTimeout 1..100`` to set Mqtt Socket Timeout (default 4) (#5341)
+- Commands ``DisplayType`` to select sub-modules where implemented and ``DisplayInvert`` to select inverted display where implemented
+- Support for TM1638 seven segment display by Ajith Vasudevan (#11031)
+- Support for MAX7219 seven segment display by Ajith Vasudevan (#11387)
+- Support for Frequency monitoring and zero-cross detection on CSE7761 (Sonoff Dual R3)
+- ESP32 support for internal Hall Effect sensor connected to both GPIO36 and GPIO39 only
+
+### Changed
+- PubSubClient library from EspEasy v2.7.12 to Tasmota v2.8.12
+- IRremoteESP8266 library from v2.7.15 to v2.7.16
+
 ## [9.3.1.1]
 ### Added
 - Support for CSE7761 energy monitor as used in ESP32 based Sonoff Dual R3 Pow (#10793)
@@ -16,6 +29,9 @@ All notable changes to this project will be documented in this file.
 - Crash protection in ext_vnsprintf_P (#11202)
 - Extent compile time SetOptions support (#11204)
 - ESP32 Extent BLE (#11212)
+- ESP32 support for WS2812 hardware driver via RMT or I2S
+- ESP32 support for secondary I2C controller
+- Support for MPU6886 on primary or secondary I2C bus
 
 ### Changed
 - ESP32 core library from v1.0.5-rc6 to v1.0.5
@@ -35,6 +51,7 @@ All notable changes to this project will be documented in this file.
 - Zigbee exception when bad frame is received (#11192)
 - ESP32 flash script for Odroid and Core2 (#11227)
 - ESP32 WS2812 bitbang support (#11248)
+- DS18x20 driver timing issue (#11270)
 
 ## [Released]
 
