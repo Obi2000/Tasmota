@@ -543,6 +543,11 @@
 #define D_CMND_LATITUDE "Latitude"
 #define D_CMND_LONGITUDE "Longitude"
 
+// HttpHook: Commands xdrv_95_httphook.ino
+#define D_CMND_HTTPHOOKHOST "HttpHookHost"
+#define D_CMND_HTTPHOOKPORT "HttpHookPort"
+
+
 // Commands xdrv_23_zigbee.ino
 #define D_PRFX_ZB "Zb"
 #define D_SO_ZIGBEE_NAMEKEY "NameKey"

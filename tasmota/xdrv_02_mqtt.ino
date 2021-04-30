@@ -338,6 +338,14 @@ void MqttPublish(const char* topic, bool retained) {
     retained = false;                                    // Some brokers don't support retained, they will disconnect if received
   }
 
+  #ifdef USE_HTTPHOOK
+    // HttpHook: Simple method to publish status to a HttpHook.
+    // HttpHook: Due to the number of routes into this function, this is probably the cleanest location to put this call.
+    if (Settings.flag5.httphook_enabled) {
+      httphookPublish();
+    }
+  #endif
+
   String log_data;                                       // 20210420 Moved to heap to solve tight stack resulting in exception 2
   if (Settings.flag.mqtt_enabled && MqttPublishLib(topic, retained)) {  // SetOption3 - Enable MQTT
     log_data = F(D_LOG_MQTT);                            // MQT:

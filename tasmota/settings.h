@@ -170,7 +170,12 @@ typedef union {                            // Restricted by MISRA-C Rule 18.4 bu
     uint32_t spare28 : 1;                  // bit 28
     uint32_t spare29 : 1;                  // bit 29
     uint32_t spare30 : 1;                  // bit 30
-    uint32_t spare31 : 1;                  // bit 31
+	#ifdef USE_HTTPHOOK
+      // HttpHook: Variable to specify whether HttpHook is enabled. Choosing last spare in case Tasmota adds more variables. so145
+      uint32_t httphook_enabled : 1;
+    #else
+      uint32_t spare31 : 1;
+    #endif
   };
 } SysBitfield5;
 
@@ -694,7 +699,18 @@ struct {
   uint16_t      shd_warmup_brightness;     // F5C
   uint8_t       shd_warmup_time;           // F5E
 
-  uint8_t       free_f5f[69];              // F5F - Decrement if adding new Setting variables just above and below
+    #ifdef USE_HTTPHOOK
+    // HttpHook: settings structure place holder for HttpHook settings
+    char          httphook_host[33];        // 33 bytes
+    uint16_t      httphook_port;            // 0x2 bytes
+
+    // HttpHook: Using some free space for HttpHook, make sure the size of Settings don't change!
+    uint8_t       free_f5e[34];               // 69 - 35
+
+	#else
+    uint8_t       free_f5f[69];               
+	#endif
+
 
   // Only 32 bit boundary variables below
 

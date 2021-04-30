@@ -230,48 +230,49 @@ void HueRespondToMSearch(void)
 
 //<?xml version="1.0"?><root xmlns="urn:schemas-upnp-org:device-1-0"><specVersion><major>1</major><minor>0</minor></specVersion><URLBase>http://{x1:80/</URLBase><device><deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType><friendlyName>Amazon-Echo-HA-Bridge ({x1)</friendlyName><manufacturer>Royal Philips Electronics</manufacturer><manufacturerURL>http://www.philips.com</manufacturerURL><modelDescription>Philips hue Personal Wireless Lighting</modelDescription><modelName>Philips hue bridge 2012</modelName><modelNumber>929000226503</modelNumber><serialNumber>{x3</serialNumber><UDN>uuid:{x2</UDN></device></root>\r\n\r\n
 //Successfully compressed from 625 to 391 bytes (-37.4%)
-const size_t HUE_DESCRIPTION_XML_SIZE = 625;
-const char HUE_DESCRIPTION_XML_COMPRESSED[] PROGMEM = "\x3D\x0E\xD1\xB0\x68\x48\xCD\xFF\xDB\x9C\x7C\x3D\x87\x21\xD1\x9E\xC3\xB4\x7E\x1E"
-                             "\x85\xFC\xCA\x46\xC1\xA1\x77\x8F\x87\xB0\x5F\xF8\xF3\xF0\x62\x98\xDB\xF1\xD6\x2C"
-                             "\x67\x0C\x3A\xF3\xE3\xC7\x98\x8C\xCF\x43\x67\x59\xC8\x75\xB3\xD8\x7E\x1E\x85\xE1"
-                             "\x8C\x32\x33\x04\x1C\x78\xFC\x3D\x06\xD9\xAF\x3E\x7E\x1C\x87\xA1\xD8\x40\x83\x14"
-                             "\xF4\x1B\xBD\x9F\x3F\x0E\x33\xD0\xEC\x20\x41\x8A\x7A\x1D\x80\x91\x85\x10\xB2\xF9"
-                             "\x04\x43\xAF\xCC\xFC\x15\x54\x30\xF3\x3B\x0E\xC3\xDA\x6C\x39\x0F\x3F\xB3\xB0\xF4"
-                             "\x3B\x08\x10\xEA\x1E\x80\x83\xA2\x82\x1C\x42\xA3\x21\x8C\xFC\x05\x6D\xB4\xF3\x21"
-                             "\xD7\xED\x0C\xF3\x39\x0F\x43\xB0\x81\x1B\x0C\x3D\x0C\x7F\x5F\x08\x11\x91\x75\x8D"
-                             "\x67\xE1\x58\xDB\x36\xE7\x1D\x64\xC3\x15\x87\x59\x0A\x2B\x3A\xC8\x77\xF4\x41\xE6"
-                             "\x8E\xE9\xED\x36\x1C\x87\x78\xF4\x3B\x08\x12\x30\x63\xD0\x6D\xF0\xB3\x16\x1D\x0B"
-                             "\xFB\xF9\xF8\x5F\xC3\x2B\x09\x10\xC1\x5A\x16\x8C\xF2\x26\x13\x0E\xBF\x9D\xA1\xF8"
-                             "\xF4\x3B\x01\x23\x04\x04\x8C\x48\x85\x97\xC8\x20\x43\xE0\xDC\x7C\x7C\x7C\xE8\x30"
-                             "\x10\x71\xA3\xA0\x78\x34\x12\x71\x22\x16\x5F\x20\x8F\xC3\xD0\x6E\x08\xC2\x21\x1F"
-                             "\x83\xFE\x8C\xAD\xCE\x3F\x01\x0F\x49\x14\x2D\xA2\x18\xFF\xEC\xEB\x09\x10\xFE\xFD"
-                             "\x84\xFD\xE4\x41\x68\xF0\xAA\xDE\x1E\x3D\x0E\xC0\x4C\xC5\x41\x07\x27\x2E\xB1\xAC"
-                             "\x12\x32\x01\xC0\x83\xC2\x41\xCA\x72\x88\x10\xB1\x10\x42\xE1\x13\x04\x61\x17\x0B"
-                             "\x1A\x39\xFC\xFC\x38\xA9\x36\xEA\xBB\x5D\x90\x21\xE0\x20\x83\x58\xF4\xF3\xFE\xD8"
-                             "\x21\xCA\x3D\xA6\xC3\x96\x7A\x1D\x84\x09\x13\x8F\x42\x16\x42\x17\x1F\x82\xC5\xE8"
-                             "\x87\x99\xED\x36\x1C\xA3\xD0\xEC\x22\x16\x42\x17\x1F\x80\x87\xC7\x19\xF8\x7A\x1D"
-                             "\x9F\xCC\xA3\xF2\x70\xA4\x6E\x9C\x29\x1B\x8D";
-// const char HUE_DESCRIPTION_XML[] PROGMEM =
-//   "<?xml version=\"1.0\"?>"
-//   "<root xmlns=\"urn:schemas-upnp-org:device-1-0\">"
-//   "<specVersion>"
-//     "<major>1</major>"
-//     "<minor>0</minor>"
-//   "</specVersion>"
-//   "<URLBase>http://{x1:80/</URLBase>"
-//   "<device>"
-//     "<deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>"
-//     "<friendlyName>Amazon-Echo-HA-Bridge ({x1)</friendlyName>"
-//     "<manufacturer>Royal Philips Electronics</manufacturer>"
-//     "<manufacturerURL>http://www.philips.com</manufacturerURL>"
-//     "<modelDescription>Philips hue Personal Wireless Lighting</modelDescription>"
-//     "<modelName>Philips hue bridge 2012</modelName>"
-//     "<modelNumber>929000226503</modelNumber>"
-//     "<serialNumber>{x3</serialNumber>"
-//     "<UDN>uuid:{x2</UDN>"
-//   "</device>"
-//   "</root>\r\n"
-//   "\r\n";
+//const size_t HUE_DESCRIPTION_XML_SIZE = 625;
+//const char HUE_DESCRIPTION_XML_COMPRESSED[] PROGMEM = "\x3D\x0E\xD1\xB0\x68\x48\xCD\xFF\xDB\x9C\x7C\x3D\x87\x21\xD1\x9E\xC3\xB4\x7E\x1E"
+//                             "\x85\xFC\xCA\x46\xC1\xA1\x77\x8F\x87\xB0\x5F\xF8\xF3\xF0\x62\x98\xDB\xF1\xD6\x2C"
+//                             "\x67\x0C\x3A\xF3\xE3\xC7\x98\x8C\xCF\x43\x67\x59\xC8\x75\xB3\xD8\x7E\x1E\x85\xE1"
+//                             "\x8C\x32\x33\x04\x1C\x78\xFC\x3D\x06\xD9\xAF\x3E\x7E\x1C\x87\xA1\xD8\x40\x83\x14"
+//                             "\xF4\x1B\xBD\x9F\x3F\x0E\x33\xD0\xEC\x20\x41\x8A\x7A\x1D\x80\x91\x85\x10\xB2\xF9"
+//                             "\x04\x43\xAF\xCC\xFC\x15\x54\x30\xF3\x3B\x0E\xC3\xDA\x6C\x39\x0F\x3F\xB3\xB0\xF4"
+//                             "\x3B\x08\x10\xEA\x1E\x80\x83\xA2\x82\x1C\x42\xA3\x21\x8C\xFC\x05\x6D\xB4\xF3\x21"
+//                             "\xD7\xED\x0C\xF3\x39\x0F\x43\xB0\x81\x1B\x0C\x3D\x0C\x7F\x5F\x08\x11\x91\x75\x8D"
+//                             "\x67\xE1\x58\xDB\x36\xE7\x1D\x64\xC3\x15\x87\x59\x0A\x2B\x3A\xC8\x77\xF4\x41\xE6"
+//                             "\x8E\xE9\xED\x36\x1C\x87\x78\xF4\x3B\x08\x12\x30\x63\xD0\x6D\xF0\xB3\x16\x1D\x0B"
+//                             "\xFB\xF9\xF8\x5F\xC3\x2B\x09\x10\xC1\x5A\x16\x8C\xF2\x26\x13\x0E\xBF\x9D\xA1\xF8"
+//                             "\xF4\x3B\x01\x23\x04\x04\x8C\x48\x85\x97\xC8\x20\x43\xE0\xDC\x7C\x7C\x7C\xE8\x30"
+//                             "\x10\x71\xA3\xA0\x78\x34\x12\x71\x22\x16\x5F\x20\x8F\xC3\xD0\x6E\x08\xC2\x21\x1F"
+//                             "\x83\xFE\x8C\xAD\xCE\x3F\x01\x0F\x49\x14\x2D\xA2\x18\xFF\xEC\xEB\x09\x10\xFE\xFD"
+//                             "\x84\xFD\xE4\x41\x68\xF0\xAA\xDE\x1E\x3D\x0E\xC0\x4C\xC5\x41\x07\x27\x2E\xB1\xAC"
+//                             "\x12\x32\x01\xC0\x83\xC2\x41\xCA\x72\x88\x10\xB1\x10\x42\xE1\x13\x04\x61\x17\x0B"
+//                             "\x1A\x39\xFC\xFC\x38\xA9\x36\xEA\xBB\x5D\x90\x21\xE0\x20\x83\x58\xF4\xF3\xFE\xD8"
+//                             "\x21\xCA\x3D\xA6\xC3\x96\x7A\x1D\x84\x09\x13\x8F\x42\x16\x42\x17\x1F\x82\xC5\xE8"
+//                             "\x87\x99\xED\x36\x1C\xA3\xD0\xEC\x22\x16\x42\x17\x1F\x80\x87\xC7\x19\xF8\x7A\x1D"
+//                             "\x9F\xCC\xA3\xF2\x70\xA4\x6E\x9C\x29\x1B\x8D";
+ const char HUE_DESCRIPTION_XML[] PROGMEM =
+   "<?xml version=\"1.0\"?>"
+   "<root xmlns=\"urn:schemas-upnp-org:device-1-0\">"
+   "<specVersion>"
+     "<major>1</major>"
+     "<minor>0</minor>"
+   "</specVersion>"
+   "<URLBase>http://{x1:80/</URLBase>"
+   "<device>"
+     "<deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>"
+     "<friendlyName>{x4</friendlyName>"
+//    "<friendlyName>Amazon-Echo-HA-Bridge ({x1)</friendlyName>"
+     "<manufacturer>Royal Philips Electronics</manufacturer>"
+     "<manufacturerURL>http://www.philips.com</manufacturerURL>"
+     "<modelDescription>Philips hue Personal Wireless Lighting</modelDescription>"
+     "<modelName>Philips hue bridge 2012</modelName>"
+     "<modelNumber>929000226503</modelNumber>"
+     "<serialNumber>{x3</serialNumber>"
+     "<UDN>uuid:{x2</UDN>"
+   "</device>"
+   "</root>\r\n"
+   "\r\n";
 
 const char HUE_LIGHTS_U[] PROGMEM =
   //=HUE_LIGHTS_STATUS_JSON1_SUFFIX
@@ -425,10 +426,11 @@ String GetHueUserId(void)
 void HandleUpnpSetupHue(void)
 {
   AddLog(LOG_LEVEL_DEBUG, PSTR(D_LOG_HTTP D_HUE_BRIDGE_SETUP));
-  String description_xml = Decompress(HUE_DESCRIPTION_XML_COMPRESSED,HUE_DESCRIPTION_XML_SIZE);
+  String description_xml = HUE_DESCRIPTION_XML;
   description_xml.replace(F("{x1"), WiFi.localIP().toString());
   description_xml.replace(F("{x2"), HueUuid());
   description_xml.replace(F("{x3"), HueSerialnumber());
+  description_xml.replace(F("{x4"), ModuleName().c_str()?ModuleName().c_str():"Tasmota");
   WSSend(200, CT_XML, description_xml);
 }
 

@@ -309,6 +309,10 @@ const char HTTP_FORM_OTHER[] PROGMEM =
   "<label><b>" D_WEB_ADMIN_PASSWORD "</b><input type='checkbox' onclick='sp(\"wp\")'></label><br><input id='wp' type='password' placeholder=\"" D_WEB_ADMIN_PASSWORD "\" value=\"" D_ASTERISK_PWD "\"><br>"
   "<br>"
   "<label><input id='b1' type='checkbox'%s><b>" D_MQTT_ENABLE "</b></label><br>"
+  #ifdef USE_HTTPHOOK
+    // HttpHook: Additional button for HttpHook support
+  "<label><input id='h1' name='h1' type='checkbox'%s><b>" D_HTTPHOOK_ENABLE "</b></label><br/>"
+  #endif
   "<br>"
   "<label><b>" D_DEVICE_NAME "</b> (%s)</label><br><input id='dn' placeholder=\"\" value=\"%s\"><br>"
   "<br>";
@@ -351,7 +355,7 @@ const char HTTP_COUNTER[] PROGMEM =
   "<br><div id='t' style='text-align:center;'></div>";
 
 const char HTTP_END[] PROGMEM =
-  "<div style='text-align:right;font-size:11px;'><hr/><a href='https://bit.ly/tasmota' target='_blank' style='color:#aaa;'>Tasmota %s " D_BY " Theo Arends</a></div>"
+  "<div style='text-align:right;font-size:11px;'><hr/><a href='https://bit.ly/tasmota' target='_blank' style='color:#aaa;'>Tasmota %s HttpHook " D_BY " Theo Arends</a></div>"
   "</div>"
   "</body>"
   "</html>";
@@ -2086,6 +2090,9 @@ void HandleOtherConfiguration(void) {
   strlcpy(stemp, TasmotaGlobal.mqtt_data, sizeof(stemp));  // Get JSON template
   WSContentSend_P(HTTP_FORM_OTHER, stemp, (USER_MODULE == Settings.module) ? PSTR(" checked disabled") : "",
     (Settings.flag.mqtt_enabled) ? PSTR(" checked") : "",   // SetOption3 - Enable MQTT
+	#ifdef USE_HTTPHOOK
+    (Settings.flag5.httphook_enabled) ? " checked" : "",  // SetOption145 - Enable HttpHook
+	#endif
     SettingsText(SET_FRIENDLYNAME1), SettingsText(SET_DEVICENAME));
 
   uint32_t maxfn = (TasmotaGlobal.devices_present > MAX_FRIENDLYNAMES) ? MAX_FRIENDLYNAMES : (!TasmotaGlobal.devices_present) ? 1 : TasmotaGlobal.devices_present;
@@ -2146,6 +2153,10 @@ void OtherSaveSettings(void) {
     WebGetArg(webindex, tmp1, sizeof(tmp1));  // Friendly name 1 to 8
     snprintf_P(command, sizeof(command), PSTR("%s;" D_CMND_FN"%d %s"), command, i +1, (!strlen(tmp1)) ? "\"" : tmp1);
   }
+
+#ifdef USE_HTTPHOOK
+  snprintf_P(command, sizeof(command), PSTR("%s;" D_CMND_SO "145 %d;"), command, Webserver->hasArg("h1"));    //so145
+#endif
 
 #ifdef USE_EMULATION
 #if defined(USE_EMULATION_WEMO) || defined(USE_EMULATION_HUE)

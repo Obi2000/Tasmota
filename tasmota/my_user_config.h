@@ -169,7 +169,12 @@
 #define WEB_SERVER             2                 // [WebServer] Web server (0 = Off, 1 = Start as User, 2 = Start as Admin)
 #define WEB_PASSWORD           ""                // [WebPassword] Web server Admin mode Password for WEB_USERNAME (empty string = Disable)
 #define FRIENDLY_NAME          "Tasmota"         // [FriendlyName] Friendlyname up to 32 characters used by webpages and Alexa
-#define EMULATION              EMUL_NONE         // [Emulation] Select Belkin WeMo (single relay/light) or Hue Bridge emulation (multi relay/light) (EMUL_NONE, EMUL_WEMO or EMUL_HUE)
+#ifndef USE_HTTPHOOK
+  #define EMULATION              EMUL_NONE         // [Emulation] Select Belkin WeMo (single relay/light) or Hue Bridge emulation (multi relay/light) (EMUL_NONE, EMUL_WEMO or EMUL_HUE)
+#else
+  #define EMULATION              EMUL_HUE          // [Emulation] This is needed for HttpHook device discovery
+#endif
+        // [Emulation] Select Belkin WeMo (single relay/light) or Hue Bridge emulation (multi relay/light) (EMUL_NONE, EMUL_WEMO or EMUL_HUE)
 #define EMULATION_HUE_1ST_GEN  false             // [Emulation] Force SetOption109 1 - if you only have Echo Dot 2nd gen devices
 #define CORS_DOMAIN            ""                // [Cors] CORS Domain for preflight requests
 
@@ -340,6 +345,13 @@
 #define ZIGBEE_DISTINCT_TOPICS false             // [SetOption89] Enable unique device topic based on Zigbee device ShortAddr
 #define ZIGBEE_RMV_ZBRECEIVED  false             // [SetOption100] Remove ZbReceived form JSON message
 #define ZIGBEE_INDEX_EP        false             // [SetOption101] Add the source endpoint as suffix to attributes, ex `Power3` instead of `Power` if sent from endpoint 3
+#ifdef USE_HTTPHOOK
+  #define HTTPHOOK_USE            true               // Select default HttpHook use (0 = Off, 1 = On)
+  // HttpHook: Default value text for the HttpHook host ip address
+  #define HTTPHOOK_HOST           ""              // [HttpHookHost]
+  // HttpHook: Default value text for the HttpHook host port number
+  #define HTTPHOOK_PORT           39501           // [HttpHookPort] HttpHook port
+#endif
 
 /*********************************************************************************************\
  * END OF SECTION 1
@@ -392,9 +404,12 @@
 #define MQTT_CLEAN_SESSION     1                 // Mqtt clean session connection (0 = No clean session, 1 = Clean session (default))
 
 // -- MQTT - Domoticz -----------------------------
-#define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
-  #define DOMOTICZ_IN_TOPIC    "domoticz/in"     // Domoticz Input Topic
-  #define DOMOTICZ_OUT_TOPIC   "domoticz/out"    // Domoticz Output Topic
+// HttpHook: Disabling features not needed when running HttpHook
+#ifndef USE_HTTPHOOK                              
+  #define USE_DOMOTICZ                             // Enable Domoticz (+6k code, +0.3k mem)
+    #define DOMOTICZ_IN_TOPIC    "domoticz/in"     // Domoticz Input Topic
+    #define DOMOTICZ_OUT_TOPIC   "domoticz/out"    // Domoticz Output Topic
+#endif
 
 // -- MQTT - Home Assistant Discovery -------------
 #define USE_HOME_ASSISTANT                                   // Enable Home Assistant Discovery Support (+12k code, +6 bytes mem)
@@ -427,7 +442,10 @@
 
 // -- KNX IP Protocol -----------------------------
 //#define USE_KNX                                  // Enable KNX IP Protocol Support (+9.4k code, +3k7 mem)
+// HttpHook: Disabling features not needed when running HttpHook
+#ifndef USE_HTTPHOOK                              
   #define USE_KNX_WEB_MENU                       // Enable KNX WEB MENU (+8.3k code, +144 mem)
+#endif
 
 // -- HTTP ----------------------------------------
 #define USE_WEBSERVER                            // Enable web server and Wifi Manager (+66k code, +8k mem)
@@ -484,7 +502,9 @@
 #define USE_BUZZER                               // Add support for a buzzer (+0k6 code)
 #define USE_ARILUX_RF                            // Add support for Arilux RF remote controller (+0k8 code, 252 iram (non 2.3.0))
 #define USE_SHUTTER                              // Add Shutter support for up to 4 shutter with different motortypes (+11k code)
-#define USE_DEEPSLEEP                            // Add support for deepsleep (+1k code)
+#ifndef USE_HTTPHOOK
+  #define USE_DEEPSLEEP                            // Add support for deepsleep (+1k code)
+#endif
 #define USE_EXS_DIMMER                           // Add support for ES-Store WiFi Dimmer (+1k5 code)
 //  #define EXS_MCU_CMNDS                          // Add command to send MCU commands (+0k8 code)
 //#define USE_HOTPLUG                              // Add support for sensor HotPlug

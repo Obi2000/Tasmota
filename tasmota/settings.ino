@@ -871,6 +871,9 @@ void SettingsDefaultSet2(void) {
   Settings.mqttlog_level = MQTT_LOG_LEVEL;
   Settings.mqtt_keepalive = MQTT_KEEPALIVE;
   Settings.mqtt_socket_timeout = MQTT_SOCKET_TIMEOUT;
+  #ifdef USE_HTTPHOOK
+    flag5.httphook_enabled |= HTTPHOOK_USE;
+  #endif
 
   // Energy
   flag.no_power_on_check |= ENERGY_VOLTAGE_ALWAYS;
